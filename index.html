@@ -1,13 +1,4 @@
-import zipfile
-from pathlib import Path
-import shutil
-
-# Setup paths
-base_path = Path("/mnt/data/prajwal_site")
-base_path.mkdir(parents=True, exist_ok=True)
-
-# HTML content
-html_content = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -18,13 +9,59 @@ html_content = """<!DOCTYPE html>
       font-family: Arial, sans-serif;
       text-align: center;
       padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: linear-gradient(-45deg, #74ebd5, #acb6e5, #d4fc79, #96e6a1);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
     }
+
+    h1 {
+      color: #ffffff;
+      font-size: 2.5em;
+      animation: slideIn 1s ease-out;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+    }
+
+    p {
+      color: #f9f9f9;
+      font-size: 1.1em;
+      animation: fadeInText 2s ease-in;
+      margin: 10px 0;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+
     img {
       width: 90%;
       max-width: 600px;
       margin: 20px auto;
       border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      animation: zoomIn 1.5s ease;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeInText {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
     }
   </style>
 </head>
@@ -39,30 +76,4 @@ html_content = """<!DOCTYPE html>
   <p>Call/WhatsApp: 9146642641 | Email: prajwalmuruskar31032@gmail.com</p>
 </body>
 </html>
-"""
 
-# Save HTML file
-html_path = base_path / "index.html"
-with open(html_path, "w", encoding="utf-8") as f:
-    f.write(html_content)
-
-# Copy and rename uploaded images
-uploaded_images = [
-    ("/mnt/data/image.png", "image1.png"),
-    ("/mnt/data/image (1).png", "image2.png"),
-]
-
-# Handle renaming and saving images
-for idx, (src, new_name) in enumerate(uploaded_images):
-    try:
-        shutil.copy(src, base_path / new_name)
-    except FileNotFoundError:
-        continue  # Skip if file doesn't exist
-
-# Create zip archive
-zip_path = Path("/mnt/data/prajwal_website.zip")
-with zipfile.ZipFile(zip_path, 'w') as zipf:
-    for file in base_path.iterdir():
-        zipf.write(file, arcname=file.name)
-
-zip_path
